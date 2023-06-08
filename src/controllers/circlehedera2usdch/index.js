@@ -7,31 +7,41 @@ const url = process.env.TRANSFER;
 const idempotencyKey = uuidv4();
 
 const SendHBar = async (address, amt) => {
+ var result={}
   const data = {
-    idempotencyKey: idempotencyKey,
+    idempotencyKey: idempotencyKey.toString(),
     source: { type: 'wallet', id: process.env.WALLET_ID },
-    destination: { type: 'blockchain', address: address, chain: 'HBAR' },
-    amount: { amount: amt, currency: 'USD' }
+    destination: {
+      type: 'blockchain',
+      address: address,
+      chain: 'HBAR',
+    },
+    amount: { amount: amt, currency: 'USD' },
   };
 
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
-    Authorization: `Bearer ${apiKey}`
+    Authorization: `Bearer ${apiKey}`,
   };
 
   try {
     const response = await fetch(url, {
       method: 'POST',
       headers: headers,
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
 
-    const json = await response.json();
-    return json;
+    if (!response.ok) {
+      throw new Error('An error occurred during the transfer.');
+    }
+
+  result = await response.json();
+    return result;
   } catch (error) {
     console.error('error:', error);
-    throw error;
+    result = await error.json();
+    return result;
   }
 };
 

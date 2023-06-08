@@ -7,6 +7,7 @@ const url = process.env.CREATE_ADDRESS
 
 
 const CreateHbarAddress = () => {
+  var data={};
     const idempotencyKey = uuidv4();
   const options = {
     method: 'POST',
@@ -17,15 +18,18 @@ const CreateHbarAddress = () => {
     },
     body: JSON.stringify({
       currency: 'USD',
-      chain: 'XLM',
+      chain: 'HBAR',
       idempotencyKey: `${idempotencyKey.toString()}`,
     }),
   }
 
   fetch(url, options)
     .then((res) => res.json())
-    .then((json) => console.log(json))
+    .then((json) =>{ console.log(json)
+    data=json})
     .catch((err) => console.error('error:' + idempotencyKey))
+
+    return data
 }
 
 module.exports = CreateHbarAddress
