@@ -6,23 +6,29 @@ const apiKey = process.env.API_KEY;
 const url = process.env.TRANSFER;
 const idempotencyKey = uuidv4();
 
+/**
+ * Sends HBar transfer request to the specified address.
+ * @param {string} address - The destination address for the transfer.
+ * @param {number} amt - The amount to transfer in USD.
+ * @returns {Promise<object>} - Promise that resolves to the result of the transfer.
+ */
 const SendHBar = async (address, amt) => {
- var result={}
+  var result = {};
   const data = {
-    idempotencyKey: idempotencyKey.toString(),
-    source: { type: 'wallet', id: process.env.WALLET_ID },
+    idempotencyKey: idempotencyKey.toString(), // Set the idempotency key for the transfer
+    source: { type: 'wallet', id: process.env.WALLET_ID }, // Set the source wallet details
     destination: {
       type: 'blockchain',
-      address: address,
-      chain: 'HBAR',
+      address: address, // Set the destination address for the transfer
+      chain: 'HBAR', // Specify the blockchain chain
     },
-    amount: { amount: amt, currency: 'USD' },
+    amount: { amount: amt, currency: 'USD' }, // Set the amount and currency for the transfer
   };
 
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
-    Authorization: `Bearer ${apiKey}`,
+    Authorization: `Bearer ${apiKey}`, // Set the authorization header with the API key
   };
 
   try {
@@ -36,7 +42,8 @@ const SendHBar = async (address, amt) => {
       throw new Error('An error occurred during the transfer.');
     }
 
-  result = await response.json();
+    // Parse the response JSON
+    result = await response.json();
     return result;
   } catch (error) {
     console.error('error:', error);
@@ -46,4 +53,3 @@ const SendHBar = async (address, amt) => {
 };
 
 module.exports = SendHBar;
-
