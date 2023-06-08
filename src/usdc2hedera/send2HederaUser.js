@@ -6,13 +6,13 @@ const apiKey = process.env.API_KEY
 const url = process.env.TRANSFER
 const idempotencyKey = uuidv4();
 
-const SendHBar = () => {
+const SendHBar = (address,amt) => {
 
     const data = {
       idempotencyKey: idempotencyKey,
       source: { type: 'wallet', id: process.env.WALLET_ID },
-      destination: { type: 'blockchain', address: 'BL27TI3CYMFX5URLYNBJJZGV4ABRYJJHBMLRR5OYSVPUVDIUAF66IR4COA', chain: 'ALGO' },
-      amount: { amount: '1.00', currency: 'USD' }
+      destination: { type: 'blockchain', address: address, chain: 'HBAR' },
+      amount: { amount: amt, currency: 'USD' }
     };
     
     const headers = {
